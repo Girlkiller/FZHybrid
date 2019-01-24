@@ -1,0 +1,63 @@
+//
+//  FZHybrid-Prefix.pch
+//  FZHybrid
+//
+//  Created by zzc483 on 2019/1/15.
+//  Copyright © 2019年 qiufeng. All rights reserved.
+//
+
+#ifndef FZHybrid_Prefix_pch
+#define FZHybrid_Prefix_pch
+
+
+#define SCREEN_WIDTH    ([[UIScreen mainScreen] bounds].size.width)
+#define SCREEN_HEIGHT   ([[UIScreen mainScreen] bounds].size.height)
+#define SCREEN_SCALE    (SCREEN_WIDTH/SCREEN_HEIGHT)
+#define SCREEN_MAX_LENGTH (MAX(SCREEN_WIDTH, SCREEN_HEIGHT))
+#define SCREEN_MIN_LENGTH (MIN(SCREEN_WIDTH, SCREEN_HEIGHT))
+
+#define WIDTH(w) ( (w)*(SCREEN_WIDTH/375.0) )
+#define HEIGHT(h) ( IS_FULLSCREEN?h:((h)*(SCREEN_HEIGHT/667.0)) )
+
+#pragma mark - 判断设备
+
+#define IS_IPAD (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
+#define IS_IPHONE (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone)
+
+#pragma mark - 判断机型
+
+#define IS_IPHONE_4_OR_LESS (IS_IPHONE && SCREEN_MAX_LENGTH < 568.0)
+#define IS_IPHONE_5 (IS_IPHONE && SCREEN_MAX_LENGTH == 568.0)
+#define IS_IPHONE_6 (IS_IPHONE && SCREEN_MAX_LENGTH == 667.0)
+#define IS_IPHONE_6P (IS_IPHONE && SCREEN_MAX_LENGTH == 736.0)
+#define IS_IPHONE_X_XS (IS_IPHONE && SCREEN_MAX_LENGTH == 812.0)
+#define IS_IPHONE_XR_XSMAX (IS_IPHONE && SCREEN_MAX_LENGTH == 896.0)
+#define IS_IPHONE_X_SERIES (SCREEN_WIDTH == 375.0 && SCREEN_HEIGHT == 812.0 ? YES : NO)
+#define IS_IPHONE_XR_SERIES (SCREEN_WIDTH == 414.0 && SCREEN_HEIGHT == 896.0 ? YES : NO)
+#define IS_FULLSCREEN (IS_IPHONE_X_SERIES || IS_IPHONE_XR_SERIES)
+
+#define STATUSBAR_HEIGHT (IS_FULLSCREEN ? 44.0 : 20.0)
+#define NAVIGATIONBAR_HEIGHT (44.0)
+#define NAVIGATIONBAR_MAX_Y (STATUSBAR_HEIGHT+44.0)
+#define TABBAR_HEIGHT             49.0
+#define SAFEAREA_BOOMHEIGHT   34.0  ///< 底部安全区域高度
+#define SAFEAREA_HALFBOOMHEIGHT   (SAFEAREA_BOOMHEIGHT/2.0)
+#define CONTENTVIEW_SEGMENTLINE_HEIGHT (0.5)
+
+
+/****************************************************
+ 日志开关
+ *****************************************************/
+
+#ifdef DEBUG
+#   define NSLog(...) NSLog(__VA_ARGS__)
+#else
+#   define NSLog(...)
+#endif
+
+/****************************************************
+ 日志开关 - End
+ *****************************************************/
+
+
+#endif /* FZHybrid_Prefix_pch */
