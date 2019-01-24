@@ -20,6 +20,7 @@
 @property (nonatomic, weak) FZWKWebViewController *wkWebVC;
 @property (nonatomic, strong) NSMutableDictionary *methodsCache;
 
+
 @end
 
 @implementation FZUserContentHandler
@@ -86,12 +87,7 @@
             unsigned int protocolCount = 0;
             Protocol *__unsafe_unretained *protocols = class_copyProtocolList(class, &protocolCount);
             id instance = [[class alloc] init];
-            //set the real call back object
-            [instance setAssociatedWeakObject:self];
-            //add call back method
-            SEL callBackSel = @selector(callWithArguments:sel:completionHandler:);
-            Method callBackMethod = class_getInstanceMethod([self class], callBackSel);
-            class_addMethod(class, callBackSel, class_getMethodImplementation([self class], callBackSel), method_getTypeEncoding(callBackMethod));
+            
             //add viewController setter
             SEL vcSetterSel = @selector(setWebViewController:);
             Method vcSetterMethod = class_getInstanceMethod([self class], vcSetterSel);
@@ -180,84 +176,51 @@
          */
         id body = message.body;
         //only NSDictionary contains a callBack
+        NSString __block *func = nil;
         if ([body isKindOfClass:[NSDictionary class]]) {
             body = [body mutableCopy];
             [message.body enumerateKeysAndObjectsUsingBlock:^(id  _Nonnull key, id  _Nonnull obj, BOOL * _Nonnull stop) {
                 if ([obj isKindOfClass:[NSString class]] && [obj hasPrefix:@"function"]) {
-                    methodInfo[@"callBack"] = obj;
+                    func = obj;
                     [body removeObjectForKey:key];
                     *stop = YES;
                 }
             }];
         } else if ([body isKindOfClass:[NSString class]] && [(NSString *)body hasPrefix:@"function"]) {
-            methodInfo[@"callBack"] = body;
+            func = body;
         } else if ([body isKindOfClass:[NSNull class]]) {
             body = nil;
         }
-        
+        CallBackBlock callBack = [self createCallBackWithJSFunc:func];
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Warc-performSelector-leaks"
         if (instance && [instance respondsToSelector:sel]) {
-            [instance performSelector:sel withObject:body];
+            [instance performSelector:sel withObject:body withObject:callBack];
         } else if (class && [class respondsToSelector:sel]) {
-            [class performSelector:sel withObject:body];
+            [class performSelector:sel withObject:body withObject:callBack];
         }
 #pragma clang diagnostic pop
     }
-
 }
 
-#pragma mark - FZMessageCallBackProtocol
-
-- (void)callWithArguments:(id)arguments
-                      sel:(SEL)sel
-        completionHandler:(void(^_Nullable)(id _Nullable response, NSError *_Nullable error))completionHandler
+- (CallBackBlock)createCallBackWithJSFunc:(NSString *)func
 {
-    //real call back object
-    FZUserContentHandler *trueSelf = self.associatedWeakObject;
-    if (trueSelf == nil) {
-        return;
-    }
-    NSString *methodName = NSStringFromSelector(sel);
-    if ([methodName containsString:@":"]) {
-        NSArray *methodNameStrs = [methodName componentsSeparatedByString:@":"];
-        methodName = methodNameStrs.firstObject;
-    }
-    if (!methodName.length) {
-        NSLog(@"callWithArguments方法不存在");
-        return;
-    }
-    NSDictionary *methodInfo = trueSelf.methodsCache[methodName];
-    if (methodInfo && [methodInfo isKindOfClass:[NSDictionary class]]) {
-        NSString *callBack = methodInfo[@"callBack"];
-        if (callBack) {
-            NSString *callBackFormat = [callBack stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
-            if ([callBackFormat hasPrefix:@"function"]) {
-                [trueSelf callAnonymousFunction:callBackFormat params:arguments completionHandler:completionHandler];
+    return ^(id params) {
+        if (func.length && [func hasPrefix:@"function"]) {
+            id paramsFormat = params;
+            if ([params isKindOfClass:[NSArray class]] || [params isKindOfClass:[NSDictionary class]]) {
+                paramsFormat = [params JSONString];
+            } else if ([params isKindOfClass:[NSDate class]]) {
+                paramsFormat = [NSNumber numberWithDouble:[params timeIntervalSince1970]];
             }
+            
+            NSString *functionFormat = [NSString stringWithFormat:@"var _jsCallBack_ = new Function(\"return \" + %@)();\
+                                        var callBackFunc=function(param){_jsCallBack_.apply(this, [param]);};var nativeParams=%@; callBackFunc(nativeParams);", func, paramsFormat];
+            [(WKWebView *)self.wkWebVC.webView evaluateJavaScript:functionFormat completionHandler:^(id response, NSError *error) {
+                
+            }];
         }
-    }
-    
+    };
 }
-
-#pragma mark - call anonymous function
-
-- (void)callAnonymousFunction:(NSString *)callBack
-                       params:(id)params
-            completionHandler:(void(^_Nullable)(id _Nullable response, NSError *_Nullable error))completionHandler
-{
-    id paramsFormat = params;
-    if ([params isKindOfClass:[NSArray class]] || [params isKindOfClass:[NSDictionary class]]) {
-        paramsFormat = [params JSONString];
-    } else if ([params isKindOfClass:[NSDate class]]) {
-        paramsFormat = [NSNumber numberWithDouble:[params timeIntervalSince1970]];
-    }
-    
-    NSString *functionFormat = [NSString stringWithFormat:@"var _jsCallBack_ = new Function(\"return \" + %@)();\
-                                var callBackFunc=function(param){_jsCallBack_.apply(this, [param]);};var nativeParams=%@; callBackFunc(nativeParams);", callBack, paramsFormat];
-    [(WKWebView *)self.wkWebVC.webView evaluateJavaScript:functionFormat completionHandler:completionHandler];
-}
-
-
 
 @end

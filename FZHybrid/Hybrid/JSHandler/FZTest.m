@@ -16,41 +16,38 @@
 
 @implementation FZTest
 
-- (void)optionalInstanceTest:(id)params
+- (void)optionalInstanceTest:(id)params callBack:(void (^)(id))callBack
 {
     NSLog(@"%@ : %@", NSStringFromSelector(_cmd), params);
-    [self callWithArguments:params sel:_cmd completionHandler:^(id  _Nullable response, NSError * _Nullable error) {
-        if (error) {
-            NSLog(@"callWithArguments completion error: %@", error);
-        } else {
-            NSLog(@"callWithArguments completion response: %@", response);
-        }
-    }];
-    
-   
+    if (callBack) {
+        callBack(params);
+    }
 }
 
-- (void)requiredInstanceTest:(id)params
+- (void)requiredInstanceTest:(id)params callBack:(void (^)(id))callBack
 {
     NSLog(@"%@ : %@", NSStringFromSelector(_cmd), params);
-    
-    [self callWithArguments:params sel:_cmd completionHandler:^(id  _Nullable response, NSError * _Nullable error) {
-        if (error) {
-            NSLog(@"callWithArguments completion error: %@", error);
-        } else {
-            NSLog(@"callWithArguments completion response: %@", response);
-        }
-    }];
+    if (callBack) {
+        callBack(params);
+    }
 }
 
-+ (void)optionalClassTest
++ (void)optionalClassTest:(id)params callBack:(void (^)(id))callBack
 {
     NSLog(@"%@", NSStringFromSelector(_cmd));
+    
 }
 
 + (void)requiredClassMethodTest
 {
     NSLog(@"%@", NSStringFromSelector(_cmd));
+}
+
+- (void)get:(id)params callBack:(void (^)(id))callBack
+{
+    if (callBack) {
+        callBack(params);
+    }
 }
 
 #pragma mark - FZTestJSCoreProtocol

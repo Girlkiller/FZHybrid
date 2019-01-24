@@ -13,6 +13,7 @@
 		D636632221F1859F009F203E /* FZUIWebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D636632121F1859F009F203E /* FZUIWebViewController.m */; };
 		D68BB61721F71DC7008CFA59 /* NSArray+JSONString.m in Sources */ = {isa = PBXBuildFile; fileRef = D68BB61621F71DC7008CFA59 /* NSArray+JSONString.m */; };
 		D68BB61D21F86CFA008CFA59 /* FZTabBarController.m in Sources */ = {isa = PBXBuildFile; fileRef = D68BB61C21F86CFA008CFA59 /* FZTabBarController.m */; };
+		D68BB62021F98FEE008CFA59 /* FZNotification.m in Sources */ = {isa = PBXBuildFile; fileRef = D68BB61F21F98FEE008CFA59 /* FZNotification.m */; };
 		D6D4A99121EDB6D500F827A2 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = D6D4A99021EDB6D500F827A2 /* AppDelegate.m */; };
 		D6D4A99721EDB6D500F827A2 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D6D4A99521EDB6D500F827A2 /* Main.storyboard */; };
 		D6D4A99921EDB6D700F827A2 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D6D4A99821EDB6D700F827A2 /* Assets.xcassets */; };
@@ -42,6 +43,8 @@
 		D68BB61621F71DC7008CFA59 /* NSArray+JSONString.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSArray+JSONString.m"; sourceTree = "<group>"; };
 		D68BB61B21F86CFA008CFA59 /* FZTabBarController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FZTabBarController.h; sourceTree = "<group>"; };
 		D68BB61C21F86CFA008CFA59 /* FZTabBarController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FZTabBarController.m; sourceTree = "<group>"; };
+		D68BB61E21F98FEE008CFA59 /* FZNotification.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FZNotification.h; sourceTree = "<group>"; };
+		D68BB61F21F98FEE008CFA59 /* FZNotification.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FZNotification.m; sourceTree = "<group>"; };
 		D6D4A98C21EDB6D500F827A2 /* FZHybrid.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FZHybrid.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D6D4A98F21EDB6D500F827A2 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		D6D4A99021EDB6D500F827A2 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -174,6 +177,8 @@
 				D6D4A9CD21EF423200F827A2 /* FZNavigator.m */,
 				D6D4A9DB21F0923E00F827A2 /* FZLog.h */,
 				D6D4A9DC21F0923E00F827A2 /* FZLog.m */,
+				D68BB61E21F98FEE008CFA59 /* FZNotification.h */,
+				D68BB61F21F98FEE008CFA59 /* FZNotification.m */,
 			);
 			path = JSHandler;
 			sourceTree = "<group>";
@@ -251,6 +256,7 @@
 			files = (
 				D6D4A99F21EDB6D700F827A2 /* main.m in Sources */,
 				D6D4A9CE21EF423200F827A2 /* FZNavigator.m in Sources */,
+				D68BB62021F98FEE008CFA59 /* FZNotification.m in Sources */,
 				D6D4A9C721EECDCF00F827A2 /* FZUserContentHandler.m in Sources */,
 				D6D4A9DD21F0923E00F827A2 /* FZLog.m in Sources */,
 				D6D4A9B821EDC32F00F827A2 /* UIColor+Hex.m in Sources */,

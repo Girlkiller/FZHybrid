@@ -11,6 +11,12 @@ var JSNative = (function() {
 		},
 		push: function (params) {
 			 _postMessageToNative(params, 'push');
+		},
+		registerNotification: function (params) {
+			_postMessageToNative(params, 'registerNotification');
+		},
+		postNotification: function (params) {
+			_postMessageToNative(params, 'postNotification');
 		}
 	};
 

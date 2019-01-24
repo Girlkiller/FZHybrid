@@ -13,12 +13,14 @@
 @protocol FZTestJSProtocol <FZScriptMessageHandlerProtocol>
 
 @optional
-- (void)optionalInstanceTest:(id)params;
-+ (void)optionalClassTest;
+- (void)optionalInstanceTest:(id)params callBack:(void(^)(id))callBack;
++ (void)optionalClassTest:(id)params callBack:(void(^)(id))callBack;
 
 @required
-- (void)requiredInstanceTest:(id)params;
-+ (void)requiredClassMethodTest;
+- (void)requiredInstanceTest:(id)params callBack:(void(^)(id))callBack;
++ (void)requiredClassMethodTest:(id)params callBack:(void(^)(id))callBack;;
+
+- (void)get:(id)params callBack:(void(^)(id response))callBack;
 
 @end
 

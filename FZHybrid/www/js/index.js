@@ -4,6 +4,30 @@ $(function() {
 	createCellComponent();
 	initVueApp();
 	JSNative.log(JS_NATIVE_PARAMS);
+	JSNative.registerNotification({
+		name: 'FZTestNotification', 
+		callBack: function (params) {
+			JSNative.log(params);
+		}
+	});
+	JSNative.registerNotification({
+		name: 'FZTestNotification', 
+		callBack: function (params) {
+			params.date = new Date();
+			JSNative.log(params);
+		}
+	});
+
+	setTimeout(function () {
+		JSNative.postNotification({
+			name: 'FZTestNotification',
+			params: {
+				age: 28,
+				name: '老王',
+				address: '北京'
+			}
+		});
+	}, 10);
 });
 
 function createCellComponent() {

@@ -10,6 +10,11 @@
 #define FZHybrid_Prefix_pch
 
 
+/*********************************************/
+#define WeakObj(o) try{}@finally{} __weak typeof(o) o##Weak = o;
+#define StrongObj(o) autoreleasepool{} __strong typeof(o) o = o##Weak;
+/**********************************************/
+
 #define SCREEN_WIDTH    ([[UIScreen mainScreen] bounds].size.width)
 #define SCREEN_HEIGHT   ([[UIScreen mainScreen] bounds].size.height)
 #define SCREEN_SCALE    (SCREEN_WIDTH/SCREEN_HEIGHT)
