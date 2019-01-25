@@ -173,33 +173,52 @@
         /*! The body of the message.
          Allowed types are NSNumber, NSString, NSDate, NSArray,
          NSDictionary, and NSNull.
+         Notice: we encapsulate message.body to an array by Array.prototype.slice.apply(arguments) in JavaScript,
+         so here we can use objectAtIndex: to get the params one to one correspondence
          */
         id body = message.body;
-        //only NSDictionary contains a callBack
-        NSString __block *func = nil;
-        if ([body isKindOfClass:[NSDictionary class]]) {
-            body = [body mutableCopy];
-            [message.body enumerateKeysAndObjectsUsingBlock:^(id  _Nonnull key, id  _Nonnull obj, BOOL * _Nonnull stop) {
-                if ([obj isKindOfClass:[NSString class]] && [obj hasPrefix:@"function"]) {
-                    func = obj;
-                    [body removeObjectForKey:key];
-                    *stop = YES;
+        if ([body isKindOfClass:[NSArray class]]) {
+            NSMethodSignature *methodSignature = [class instanceMethodSignatureForSelector:sel];
+            NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:methodSignature];
+            invocation.selector = sel;
+            NSUInteger count = MIN([body count], [methodSignature numberOfArguments] - 2);
+            for (unsigned index = 0; index < count; index++) {
+                id param = [body objectAtIndex:index];
+                if ([param isKindOfClass:[NSString class]] && [param hasPrefix:@"function"]) {
+                    CallBackBlock callBack = [self createCallBackWithJSFunc:param];
+                    [invocation setArgument:&callBack atIndex:2 + index];
+                    [invocation retainArguments];
+                } else if ([param isKindOfClass:[NSNull class]]) {
+                    param = nil;
+                    [invocation setArgument:&param atIndex:2 + index];
+                } else if ([param isKindOfClass:[NSDictionary class]]) {
+                    NSMutableDictionary *params = [NSMutableDictionary dictionaryWithDictionary:param];
+                    for (id key in param) {
+                        id value = param[key];
+                        if ([value isKindOfClass:[NSString class]] && [value hasPrefix:@"function"]) {
+                            params[key] = [self createCallBackWithJSFunc:value];
+                        } else if ([value isKindOfClass:[NSNull class]]) {
+                            [params removeObjectForKey:key];
+                        }
+                    }
+                    [invocation setArgument:&params atIndex:2 + index];
+                    [invocation retainArguments];
+                } else {
+                    [invocation setArgument:&param atIndex:2 + index];
+                    [invocation retainArguments];
                 }
-            }];
-        } else if ([body isKindOfClass:[NSString class]] && [(NSString *)body hasPrefix:@"function"]) {
-            func = body;
-        } else if ([body isKindOfClass:[NSNull class]]) {
-            body = nil;
+            }
+            if (instance && [instance respondsToSelector:sel]) {
+                invocation.target = instance;
+            } else if (class && [class respondsToSelector:sel]) {
+                invocation.target = class;
+            }
+            @try {
+                [invocation invoke];
+            } @catch (NSException *exception) {
+                NSLog(@"invocation %@ exception: %@", methodName, exception.reason);
+            }
         }
-        CallBackBlock callBack = [self createCallBackWithJSFunc:func];
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
-        if (instance && [instance respondsToSelector:sel]) {
-            [instance performSelector:sel withObject:body withObject:callBack];
-        } else if (class && [class respondsToSelector:sel]) {
-            [class performSelector:sel withObject:body withObject:callBack];
-        }
-#pragma clang diagnostic pop
     }
 }
 

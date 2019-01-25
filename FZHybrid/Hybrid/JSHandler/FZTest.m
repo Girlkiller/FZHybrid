@@ -21,6 +21,11 @@
     NSLog(@"%@ : %@", NSStringFromSelector(_cmd), params);
     if (callBack) {
         callBack(params);
+    } else if ([params isKindOfClass:[NSDictionary class]]) {
+        CallBackBlock callBack = params[@"callBack"];
+        if (callBack) {
+            callBack(@{@"job": @"哔哔哔哔"});
+        }
     }
 }
 

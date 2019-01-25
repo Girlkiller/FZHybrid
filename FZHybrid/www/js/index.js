@@ -3,32 +3,44 @@ var vueApp;
 $(function() {
 	createCellComponent();
 	initVueApp();
-	JSNative.log(JS_NATIVE_PARAMS);
-	JSNative.registerNotification({
-		name: 'FZTestNotification', 
-		callBack: function (params) {
+	JSNative.log(null);
+	JSNative.registerNotification('FZTestNotification', function (params) {
 			JSNative.log(params);
-		}
-	});
-	JSNative.registerNotification({
-		name: 'FZTestNotification', 
-		callBack: function (params) {
+		});
+	JSNative.registerNotification('FZTestNotification', function (params) {
 			params.date = new Date();
 			JSNative.log(params);
-		}
-	});
+		});
 
 	setTimeout(function () {
-		JSNative.postNotification({
-			name: 'FZTestNotification',
-			params: {
+		JSNative.postNotification('FZTestNotification', {
 				age: 28,
 				name: '老王',
 				address: '北京'
-			}
-		});
+			});
 	}, 10);
 });
+
+function test() {
+	var paramsList = Array.prototype.slice.apply(arguments).map(function (value, index) {
+				if (typeof value == 'function') {
+					return value.toString();
+				} else if (typeof value == 'object') {
+					for (var key in value) {
+						if (typeof value[key] == 'function') {
+							value[key] = value[key].toString();
+						}
+					}
+				} 
+				return value;
+			});
+	print(paramsList);
+}
+
+function print (arguments) {
+	alert(arguments)
+	console.log(arguments);
+}
 
 function createCellComponent() {
 	Vue.component('cell', {
@@ -42,13 +54,12 @@ function createCellComponent() {
 	  `,
 	  methods: {
 	  	click: function(event) {
-
             if (this.item.name == '调用类方法') {
-            	JSNative.optionalInstanceTest(this.item);
+            	JSNative.optionalInstanceTest(this.item, testCallBack);
             } else if (this.item.name == 'test' || this.item.name == '百度') {
-            	JSNative.push(this.item);
+            	JSNative.push(this.item.url, this.item);
             } else {
-            	JSNative.requiredInstanceTest(this.item);
+            	JSNative.requiredInstanceTest(this.item, testCallBack);
             }
 	  	}
 	  }
@@ -63,21 +74,15 @@ function initVueApp() {
 				name: 'Navigator',
 				age: '28',
 				gender: 'man',
-				city: 'guangzhou',
-				success: function (param) {
-					vueApp.print(param);
-				}
+				city: 'guangzhou'
 			},{
-				name: 'NavigationBar',
-				callBack: testCallBack
+				name: 'NavigationBar'
 			},{
 				name: 'Alert'
 			},{
-				name: '调用实例方法',
-				callBack: testCallBack
+				name: '调用实例方法'
 			},{
-				name: '调用类方法',
-				callBack: testCallBack
+				name: '调用类方法'
 			},{
 				name: 'test',
 				url: 'test',
@@ -85,8 +90,7 @@ function initVueApp() {
 					name: '火影忍者',
 					level: '16',
 					boss: '大蛇丸'
-				},
-				callBack: testCallBack
+				}
 			},{
 				name: '百度',
 				url: 'https://www.baidu.com',
@@ -94,8 +98,7 @@ function initVueApp() {
 					name: '海贼王',
 					level: '20',
 					boss: '白胡子'
-				},
-				callBack: testCallBack
+				}
 			}]
 		},
 		methods: {
@@ -148,15 +151,13 @@ function initVueApp() {
 
 function navigator(param) {
 	vueApp.items.push({
-		name: '新增案例',
-		callBack: testCallBack
+		name: '新增案例'
 	})
 }
 
 function testCallBack(param) {
 	vueApp.items.push({
-		name: '新增案例',
-		callBack: testCallBack
+		name: '新增案例'
 	})
 	vueApp.print(param);
 }

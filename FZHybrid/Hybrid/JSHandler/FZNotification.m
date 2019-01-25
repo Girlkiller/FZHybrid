@@ -29,11 +29,11 @@
     return self;
 }
 
-- (void)registerNotification:(id)params callBack:(void (^)(id))callBack
+- (void)registerNotification:(NSString *)notificationName callBack:(void (^)(id))callBack
 {
-    if ([params isKindOfClass:[NSDictionary class]]) {
-        NSString *notificationName = params[@"name"];
-        NSMutableArray *callBacks = self.notifcationCache[notificationName];
+    NSAssert(notificationName.length, @"通知名不可为空");
+    NSMutableArray *callBacks = self.notifcationCache[notificationName];
+    if (callBack) {
         if (callBacks) {
             [callBacks addObject:callBack];
         } else {
@@ -41,18 +41,16 @@
             [callBacks addObject:callBack];
             self.notifcationCache[notificationName] = callBacks;
         }
-        NSLog(@"注册通知-- %@: %@", notificationName, callBacks);
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(receivedNotification:) name:notificationName object:nil];
     }
+    
+    NSLog(@"注册通知-- %@: %@", notificationName, callBacks);
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(receivedNotification:) name:notificationName object:nil];
 }
 
-- (void)postNotification:(id)params
+- (void)postNotification:(NSString *)notificationName params:(id)params
 {
-    if ([params isKindOfClass:[NSDictionary class]]) {
-        NSString *notificationName = params[@"name"];
-        NSDictionary *userInfo = params[@"params"];
-        [[NSNotificationCenter defaultCenter] postNotificationName:notificationName object:userInfo userInfo:userInfo];
-    }
+    NSAssert(notificationName.length, @"通知名不可为空");
+    [[NSNotificationCenter defaultCenter] postNotificationName:notificationName object:params userInfo:params];
 }
 
 - (void)removeNotification:(NSString *)name

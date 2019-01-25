@@ -1,39 +1,43 @@
 var JSNative = (function() {
 	var methods = {
-		log: function (params) {
-			 _postMessageToNative(params, 'log');
+		log: function () {
+			 _postMessageToNative(arguments, 'log');
 		},
-		optionalInstanceTest: function (params) {
-			 _postMessageToNative(params, 'optionalInstanceTest');
+		optionalInstanceTest: function () {
+			 _postMessageToNative(arguments, 'optionalInstanceTest');
 		},
-		requiredInstanceTest: function (params) {
-			 _postMessageToNative(params, 'requiredInstanceTest');
+		requiredInstanceTest: function () {
+			 _postMessageToNative(arguments, 'requiredInstanceTest');
 		},
-		push: function (params) {
-			 _postMessageToNative(params, 'push');
+		push: function () {
+			 _postMessageToNative(arguments, 'push');
 		},
-		registerNotification: function (params) {
-			_postMessageToNative(params, 'registerNotification');
+		registerNotification: function () {
+			_postMessageToNative(arguments, 'registerNotification');
 		},
-		postNotification: function (params) {
-			_postMessageToNative(params, 'postNotification');
+		postNotification: function () {
+			_postMessageToNative(arguments, 'postNotification');
 		}
 	};
 
-	function _postMessageToNative(params, methodName) {
+	function _postMessageToNative(arguments, methodName) {
 		var webkit = window.webkit;
 		if (typeof webkit == 'object') {
-			if (typeof params == 'function') {
-				params = params.toString();
-			} else if (params !== void 0 && typeof params == 'object') {
-				for (var key in params) {
-					if (typeof params[key] == 'function') {
-						params[key] = params[key].toString();
+			var paramsList = Array.prototype.slice.apply(arguments).map(function (value, index) {
+				if (typeof value == 'function') {
+					return value.toString();
+				} else if (typeof value == 'object') {
+					for (var key in value) {
+						if (typeof value[key] == 'function') {
+							value[key] = value[key].toString();
+						}
 					}
-				}
-			} 
+				} 
+				return value;
+			});
+			 
 			try {
-			    webkit.messageHandlers[methodName].postMessage(params);
+			    webkit.messageHandlers[methodName].postMessage(paramsList);
 			} catch (error) {
 				alert(error);
 			}

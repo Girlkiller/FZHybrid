@@ -11,9 +11,9 @@
 
 @protocol FZNotificationProtocol <FZScriptMessageHandlerProtocol>
 
-- (void)registerNotification:(id)params callBack:(void(^)(id))callBack;
+- (void)registerNotification:(NSString *)notificationName callBack:(void(^)(id))callBack;
 
-- (void)postNotification:(id)params;
+- (void)postNotification:(NSString *)notificationName params:(id)params;
 
 - (void)removeNotification:(NSString *)name;
 

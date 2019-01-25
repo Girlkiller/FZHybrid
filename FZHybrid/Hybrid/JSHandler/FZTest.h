@@ -10,6 +10,8 @@
 #import "FZScriptMessageHandlerProtocol.h"
 #import <JavaScriptCore/JavaScriptCore.h>
 
+typedef void(^CallBackBlock)(id);
+
 @protocol FZTestJSProtocol <FZScriptMessageHandlerProtocol>
 
 @optional

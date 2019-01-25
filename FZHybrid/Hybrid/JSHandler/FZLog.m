@@ -10,7 +10,7 @@
 
 @implementation FZLog
 
-- (void)log:(id)params
++ (void)log:(id)params
 {
     NSLog(@"log: %@", params);
 }

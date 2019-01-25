@@ -12,15 +12,9 @@
 
 @implementation FZNavigator
 
-- (void)push:(id)arguments
+- (void)push:(NSString *)path params:(id)params
 {
     NSURL *url;
-    NSString *path;
-    id params;
-    if ([arguments isKindOfClass:[NSDictionary class]]) {
-        path = arguments[@"url"];
-        params = arguments[@"params"];
-    }
     if (![path hasPrefix:@"http://"] && ![path hasPrefix:@"https://"]) {
         url = [NSURL fileURLWithPath:[[NSBundle mainBundle] pathForResource:[NSString stringWithFormat:@"www/html/%@", path] ofType:@"html"]];
     } else {

@@ -12,7 +12,7 @@
 
 @protocol FZNavigatorProtocol <FZScriptMessageHandlerProtocol>
 
-- (void)push:(id)arguments;
+- (void)push:(NSString *)path params:(id)params;
 
 @end
 

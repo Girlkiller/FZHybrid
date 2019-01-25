@@ -12,7 +12,7 @@
 
 @protocol FZLogProtocol <FZScriptMessageHandlerProtocol>
 
-- (void)log:(id)arguments;
++ (void)log:(id)arguments;
 
 @end
 
