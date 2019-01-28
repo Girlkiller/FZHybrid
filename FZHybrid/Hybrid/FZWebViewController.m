@@ -16,6 +16,16 @@
 
 @implementation FZWebViewController
 
+- (instancetype)initWithURL:(NSURL *)url
+{
+    return [self initWithType:FZWebViewTypeWK url:url params:nil];
+}
+
+- (instancetype)initWithURL:(NSURL *)url params:(id)params
+{
+    return [self initWithType:FZWebViewTypeWK url:url params:params];
+}
+
 + (instancetype)controllerWithType:(FZWebViewType)type url:(NSURL *)url
 {
     return [self controllerWithType:type url:url params:nil];
@@ -35,20 +45,17 @@
 
 - (instancetype)initWithType:(FZWebViewType)type url:(NSURL *)url params:(id _Nullable)params
 {
-    FZWebViewController *webVC = nil;
     switch (type) {
         case FZWebViewTypeWK:
-            webVC = [[FZWKWebViewController alloc] init];
+            return [[FZWKWebViewController alloc] initWithURL:url params:params];
             break;
-            
         case FZWebViewTypeWeb:
-            webVC = [[FZUIWebViewController alloc] init];
+            return [[FZUIWebViewController alloc] initWithURL:url params:params];
             break;
     }
-    webVC.url = url;
-    webVC.params = params;
-    return webVC;
 }
+
+
 
 - (void)viewDidLoad {
     [super viewDidLoad];

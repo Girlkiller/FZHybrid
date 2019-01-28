@@ -18,7 +18,11 @@ function createCellComponent() {
 	  `,
 	  methods: {
 	  	click: function(event) {
-            JSNative.optionalInstanceTest(this.item);
+	  		if (this.item.name == '山姆') {
+	  			JSNative.optionalInstanceTest(this.item);
+	  		} else {
+	  			JSNative.requiredInstanceTest(this.item);
+	  		}
             
             // var paramsString={"name":"Navigator"}; 
             // var params = JSON.parse(paramsString)

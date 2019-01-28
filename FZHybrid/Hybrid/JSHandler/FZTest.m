@@ -11,6 +11,7 @@
 
 @interface FZTest ()
 
+@property (nonatomic, copy) CallBackBlock testBlock;
 
 @end
 
@@ -19,21 +20,19 @@
 - (void)optionalInstanceTest:(id)params callBack:(void (^)(id))callBack
 {
     NSLog(@"%@ : %@", NSStringFromSelector(_cmd), params);
-    if (callBack) {
-        callBack(params);
-    } else if ([params isKindOfClass:[NSDictionary class]]) {
-        CallBackBlock callBack = params[@"callBack"];
-        if (callBack) {
-            callBack(@{@"job": @"哔哔哔哔"});
-        }
-    }
+    self.testBlock = callBack;
 }
 
 - (void)requiredInstanceTest:(id)params callBack:(void (^)(id))callBack
 {
     NSLog(@"%@ : %@", NSStringFromSelector(_cmd), params);
-    if (callBack) {
-        callBack(params);
+    if (self.testBlock) {
+        self.testBlock(@{@"job": @"扯淡", @"salary": @"50000", @"time": @"10"});
+    } else if ([params isKindOfClass:[NSDictionary class]]) {
+        CallBackBlock callBack = params[@"callBack"];
+        if (callBack) {
+            callBack(@{@"job": @"哔哔哔哔"});
+        }
     }
 }
 

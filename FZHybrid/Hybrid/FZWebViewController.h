@@ -21,6 +21,9 @@ typedef NS_ENUM(NSInteger, FZWebViewType) {
 @property (nonatomic, strong) UIView *webView;
 @property (nonatomic, nullable, strong) id params;
 
+- (instancetype)initWithURL:(NSURL *__nullable)url;
+- (instancetype)initWithURL:(NSURL *__nullable)url params:(id __nullable)params;
+
 + (instancetype)controllerWithType:(FZWebViewType)type
                                url:(NSURL *)url;
 

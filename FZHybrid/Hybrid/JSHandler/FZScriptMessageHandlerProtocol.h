@@ -14,7 +14,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @optional
 
-@property (nonatomic, strong) UIViewController *webViewController;
+@property (nonatomic, weak) UIViewController *webViewController;
 
 @end
 

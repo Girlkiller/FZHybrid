@@ -55,6 +55,7 @@
 
 - (void)removeNotification:(NSString *)name
 {
+    NSAssert(name.length, @"通知名不可为空");
     [[NSNotificationCenter defaultCenter] removeObserver:self name:name object:nil];
 }
 

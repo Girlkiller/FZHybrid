@@ -32,6 +32,20 @@ static NSString *JS_NATIVE_PARAMS = @"JS_NATIVE_PARAMS";
     [self.wkWebView removeObserver:self forKeyPath:@"title"];
 }
 
+- (instancetype)initWithURL:(NSURL *)url
+{
+    return [self initWithURL:url params:nil];
+}
+
+- (instancetype)initWithURL:(NSURL *)url params:(id)params
+{
+    if (self = [super init]) {
+        self.url = url;
+        self.params = params;
+    }
+    return self;
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
@@ -206,7 +220,13 @@ static NSString *JS_NATIVE_PARAMS = @"JS_NATIVE_PARAMS";
 
 - (void)webView:(WKWebView *)webView decidePolicyForNavigationAction:(WKNavigationAction *)navigationAction decisionHandler:(void (^)(WKNavigationActionPolicy))decisionHandler
 {
-    decisionHandler(WKNavigationActionPolicyAllow);
+    if ([navigationAction.request.URL.absoluteString isEqualToString:self.url.absoluteString]) {
+         decisionHandler(WKNavigationActionPolicyAllow);
+    } else {
+        FZWKWebViewController *webVC = [[FZWKWebViewController alloc] initWithURL:navigationAction.request.URL params:nil];
+        [self.navigationController pushViewController:webVC animated:YES];
+        decisionHandler(WKNavigationActionPolicyCancel);
+    }
 }
 
 - (void)webView:(WKWebView *)webView decidePolicyForNavigationResponse:(WKNavigationResponse *)navigationResponse decisionHandler:(void (^)(WKNavigationResponsePolicy))decisionHandler

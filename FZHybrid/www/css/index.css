@@ -22,3 +22,11 @@
 	border-top: 1px solid #e1e1e1;
 	border-bottom: 1px solid #e1e1e1;
 }
+.link {
+	margin-top: 20px;
+}
+.link a {
+	width: 60px;
+	text-decoration: underline;
+	margin-left: calc((100% - 60px)/2);
+}

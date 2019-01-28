@@ -83,6 +83,20 @@ static NSString *JS_NATIVE_PARAMS = @"JS_NATIVE_PARAMS";
     self.uiWebView.delegate = nil;
 }
 
+- (instancetype)initURL:(NSURL *)url
+{
+    return [self initURL:url params:nil];
+}
+
+- (instancetype)initURL:(NSURL *)url params:(id)params
+{
+    if (self = [super init]) {
+        self.url = url;
+        self.params = params;
+    }
+    return self;
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
