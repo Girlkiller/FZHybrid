@@ -54,6 +54,13 @@
     }
 }
 
++ (void)requiredClassMethodTest:(id)params callBack:(void (^)(id))callBack {
+    if (callBack) {
+        callBack(params);
+    }
+}
+
+
 #pragma mark - FZTestJSCoreProtocol
 
 - (NSString *)test
@@ -66,5 +73,6 @@
     [self.params addEntriesFromDictionary:params];
     [callBack.context[@"setTimeout"] callWithArguments:@[callBack, @0, [self.params JSONString]]];
 }
+
 
 @end
