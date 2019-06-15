@@ -15,4 +15,8 @@
     NSLog(@"log: %@", params);
 }
 
+- (void)log:(id)arguments {
+    NSLog(@"log: %@", arguments);
+}
+
 @end
